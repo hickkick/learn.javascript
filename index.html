@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obj this</title>
+</head>
+<body>
+    <script>
+        {
+        let user = {
+            name: "Джон",
+            go: function() { alert(this.name) }
+        }; // ;
+
+        (user.go)()
+        //let user = { go:... }(user.go)() /=> ;
+        }
+//
+
+        let obj, method;
+
+        obj = {
+            go: function() { alert(this); }
+        };
+
+        obj.go();               // (1) [object Object]
+
+        (obj.go)();             // (2) [object Object]
+
+        (method = obj.go)();    // (3) undefined / losing this
+
+        (obj.go || obj.stop)(); // (4) undefined / same losing this
+
+
+        function makeUser() {
+        return {
+            name: "Джон",
+            ref: this      // Error, but if ref was method that return this, its works;
+        };
+        };
+
+        let user = makeUser();
+
+        alert( user.ref.name ); // Каким будет результат?
+//
+
+        const calculator = {
+            read() {
+                this.a = +prompt('Enter first num: ', 0);
+                this.b = +prompt('Enter second num: ', 0);
+            },
+            sum() {
+                return this.a + this.b;
+            },
+            mul() {
+                return this.a * this.b;
+            }
+        }
+
+
+        calculator.read();
+        alert( calculator.sum() );
+        alert( calculator.mul() );
+//
+
+        let ladder = {
+            step: 0,
+            up( ) {
+                this.step++;
+                return this;
+            },
+            down() {
+                this.step--;
+                return this;
+            },
+            showStep: function() { // показывает текущую ступеньку
+                alert( this.step );
+                return this;
+            }
+        };
+
+        ladder.up();
+        ladder.up();
+        ladder.down();
+        ladder.showStep(); // 1
+
+        ladder.up().up().down().showStep(); // 1 / 2 
+    </script>
+</body>
+</html>
